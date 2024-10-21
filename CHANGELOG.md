@@ -7,4 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [modules] Added the `linux-system` module
+- [overlays] Added the `idp-apikey` overlay
 - Initial setup of the morio-templates repository

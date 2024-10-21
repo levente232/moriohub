@@ -1,0 +1,77 @@
+{{#MORIO_DOCS}}
+about: |-
+  An auditbeat module for Linux system
+
+  This combines the `system` and `auditd` auditbeat modules to gather basic data
+  from a Linux system.
+vars:
+  defaults:
+    LINUX_SYSTEM_AUDIT_MITRE: false # Note: used in rules file only
+    LINUX_SYSTEM_AUDIT_MULTICAST: false
+    LINUX_SYSTEM_AUDIT_RULE_FILES:
+      - /etc/morio/audit/rules.d/linux-system.rules
+    LINUX_SYSTEM_HYPERVISOR_VMWARE: false # Note: used in rules file only
+  local:
+    LINUX_SYSTEM_INVENTORY_INTERVAL: The interval to use for inventory data
+    LINUX_SYSTEM_AUDIT_MULTICAST: Enables data collection on multicast sockets
+    LINUX_SYSTEM_AUDIT_MITRE: Adds data to map audit events to the MITRE attack framework
+    LINUX_SYSTEM_AUDIT_RULE_FILES: A list of files with auditd rules to load
+    LINUX_SYSTEM_HYPERVISOR_VMWARE: Enable this when running on a VMWare hypervisor
+      -
+  global:
+    - MORIO_TRACK_INVENTORY
+{{/MORIO_DOCS}}
+
+{{^MORIO_DOCS}}
+- module: auditd
+{{#LINUX_SYSTEM_AUDIT_MULTICAST}}
+  socket_type: multicast
+{{/LINUX_SYSTEM_AUDIT_MULTICAST}}
+  audit_rules: |
+    -w /etc/morio/audit/config.yaml
+    -w /etc/morio/logs/config.yaml
+    -w /etc/morio/audit/modules.d/*.yaml
+    -w /etc/morio/audit/rules.d/*.rules
+    -w /etc/morio/logs/modules.d/*.yaml
+    -w /etc/morio/logs/inputs.d/*.yaml
+  audut_rule_files: {{{ LINUX_SYSTEM_AUDIT_RULE_FILES }}}
+  ignore_errors: false
+  processors:
+    - add_fields:
+        target: morio
+        fields:
+          module: {{ MORIO_MODULE_NAME }}
+
+- module: system
+  datasets:
+    - login
+    - user
+  period: 300s
+  state.period: 24h
+  login.wtmp_file_pattern: /var/log/wtmp*
+  login.btmp_file_pattern: /var/log/btmp*
+  user.detect_password_changes: true
+  processors:
+    - add_fields:
+        target: morio
+        fields:
+          module: {{ MORIO_MODULE_NAME }}
+
+{{#MORIO_TRACK_INVENTORY}}
+- module: system
+  datasets:
+    - host
+    - package
+  period: {{ LINUX_SYSTEM_INVENTORY_INTERVAL }}
+  state.period: 6h
+  login.wtmp_file_pattern: /var/log/wtmp*
+  login.btmp_file_pattern: /var/log/btmp*
+  user.detect_password_changes: true
+  processors:
+    - add_fields:
+        target: morio
+        fields:
+          module: {{ MORIO_MODULE_NAME }}
+{{/MORIO_TRACK_INVENTORY}}
+{{/MORIO_DOCS}}
+

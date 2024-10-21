@@ -17,7 +17,8 @@ There are two types of templates in this repository:
 - Morio client modules, which we refer to as [Modules](#modules)
 - Moriod settings overlays, which we refer to as [Overlays](#overlays) or
 
-> Note: This is a work in progress. YMMV
+> [!Note]
+> **This is a work in progress. YMMV.**
 
 ## Modules
 

@@ -47,7 +47,7 @@ This repository exists to facilitate that, by providing a library of
 client modules that you can use.
 
 > [!tip]
-> ##### To learn 
+> ##### Refer to the Preseeding Guide for all details
 > To learn how you can ensure these modules are bundled with the Morio client,
 > refer to [the preseeding
 > guide](https://morio.it/docs/guides/settings/preseed/).

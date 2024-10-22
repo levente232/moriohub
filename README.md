@@ -7,23 +7,27 @@
 >
 > That being said, you probably don't want to run this in production yet.
 
-# Morio Templates
+# Morio Template Hub
 
 This repository holds a curated collection of templates for
 [Morio](https://github/certeu/morio/).
 
-There are two types of templates in this repository:
+There are two types of templates curated here:
 
-- Morio client modules, which we refer to as [Modules](#modules)
-- Moriod settings overlays, which we refer to as [Overlays](#overlays) or
+- [Modules](#modules): These are Morio client modules
+- [Overlays](#overlays): These are Moriod settings overlays
+- [Watchers](#watchers): These are monitors for the watcher service (heartbeat)
 
 > [!Note]
 > **This is a work in progress. YMMV.**
 
 ## Modules
 
-(Morio client) modules provide configuration for the different agents that are
-bundled by the Morio client. These agents gather different types of data:
+The modules are stored in the `modules` folder.
+
+These (Morio client) modules provide configuration for the different agents
+that are bundled by the Morio client. These agents gather different types of
+data:
 
 - `audit`: Audit info is collected by [Auditbeat][auditbeat]
 - `logs`: Collected by [Filebeat][filebeat]
@@ -37,13 +41,16 @@ some automation.
 Maintainability and (facilitating) automation are some of [Morio's design
 goals](https://morio.it/docs/guides/goals/), so naturally we want to come up
 with a way to take the gruntwork out of this, while still giving you the
-flexibility to fin-tune the configuration of your systems.
+flexibility to fine-tune the configuration of your systems.
 
-This repository exists to facilitate that, in serves a double purpose:
+This repository exists to facilitate that, by providing a library of
+client modules that you can use.
 
-- It provides a library of client modules that you can use
-- It provides an example of how you can structure your own in-house library
-in your own way.
+> [!tip]
+> ##### To learn 
+> To learn how you can ensure these modules are bundled with the Morio client,
+> refer to [the preseeding
+> guide](https://morio.it/docs/guides/settings/preseed/).
 
 ### Rules governing client modules
 
@@ -55,17 +62,17 @@ Below are some rules to ensure each module plays nice within the Morio ecosystem
 - Modules that are platform-agnostic shall not have a platform prefix
 - Module names shall only use `[a-z][0-9]-`
 - Modules can provide one or more of the following files:
-  - `audit/module-templates.d/[module-name].yaml`: The configuration for
-    Auditbeat
-  - `audit/rule-templates.d/[module-name].rule`: A single rule file for auditd
-  - `audit/rule-templates.d/[module-name]-*.rule`: If a module utilzes multiple
-    rule files, prefix them with the module name and a dash
-  - `logs/module-templates.d/[module-name].yaml`: The module configuration for
+  - `modules/audit/module-templates.d/[module-name].yaml`: The module
+     configuration for Auditbeat
+  - `modules/audit/rule-templates.d/[module-name].rules`: A single rules file for auditd
+  - `modules/audit/rule-templates.d/[module-name]-*.rules`: If a module utilzes multiple
+    rules files, prefix them with the module name and a dash
+  - `modules/logs/module-templates.d/[module-name].yaml`: The module configuration for
     Filebeat. Create an empty placeholder file if your module only provide
     inputs.
-  - `logs/input-templates.d/[module-name].yaml`: The input configuration for
+  - `modules/logs/input-templates.d/[module-name].yaml`: The input configuration for
     Filebeat
-  - `metrics/module-templates.d/[module-name].yaml`: The configuration for
+  - `modules/metrics/module-templates.d/[module-name].yaml`: The configuration for
     Metricbeat
 
 ### Module file templates
@@ -78,10 +85,16 @@ Each of the various beats agents takes a YAML file as configuration.
 To balance the ease-of-use of having a library of templates you can re-use with
 the requirement to be able to adapt the configuration to your specific needs,
 this repository does not host YAML files but rather templates that can be
-converted to YAML files by the Morio client (or by any script utilizing the
-[Mustache templating library](https://mustache.github.io/).
+converted to YAML files by the Morio client (or by anyone utilizing
+[Mustache templates](https://mustache.github.io/).
 
-In addition, the documentation for each template is included in the module file itself. Let's look at an example of a module file structure:
+In addition, the documentation for each template is included in the module file
+itself. 
+
+### Module file structure
+
+Let's look at an example of a module file structure to make this all a bit more
+tangible::
 
 ```yaml
 # This: {{ EXAMPLE }}
@@ -94,7 +107,7 @@ In addition, the documentation for each template is included in the module file 
 # Means that whatever follows will only be rendered when MORIO_DOCS is set.
 # To close such a block, use: {{/MORIO_DOCS}}
 {{#MORIO_DOCS}}
-# We are not inside a block that will only rendered when MORIO_DOCS is set.
+# We are now inside a block that will only rendered when MORIO_DOCS is set.
 # We use this to extract the documentation info which is included in this block.
 # Your module files should follow this same structure.
 #
@@ -192,11 +205,17 @@ vars:
 
 The overlays are stored in the `overlays` folder.
 
-Refer to [the documentation on
-overlays](https://morio.it/docs/guides/settings/preseed/#understanding-overlays)
-for all details.
+These overlays extend the settings of a Morio collector.
+Refer to [the documentation on overlays][overlays] for all details.
 
+## Watchers
+
+The watchers are stored in hte `watchers` folder.
+
+FIXME: Write documentation on this.
 
 [auditbeat]: https://www.elastic.co/guide/en/beats/auditbeat/master/index.html
 [filebeat]: https://www.elastic.co/guide/en/beats/filebeat/master/index.html
 [metricbeat]: https://www.elastic.co/guide/en/beats/metricbeat/master/index.html
+[overlays]: https://morio.it/docs/guides/settings/preseed/#understanding-overlays
+

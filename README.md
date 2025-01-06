@@ -12,8 +12,9 @@
 This repository holds a curated collection of templates for
 [Morio](https://github/certeu/morio/).
 
-There are two types of templates curated here:
+There are three top-level folders here:
 
+- [bundles](#bundles): These bundle both client and colletor templates
 - [morio](#morio): These are for the Morio client
 - [moriod](#morio): These are for Moriod (the Morio collector)
   - [Overlays](#overlays): These are Moriod settings overlays

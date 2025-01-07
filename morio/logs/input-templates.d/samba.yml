@@ -5,7 +5,7 @@ about: |-
   This collects log data from the Samba package.
 vars:
   defaults:
-    MORIO_SAMBA_LOGS_PATHS:  "['/var/log/samba/log.*']"
+    MORIO_SAMBA_LOGS_PATHS: "['/var/log/samba/log.*']"
     MORIO_SAMBA_SPLUNK_INDEX_NAME: false
   local:
     MORIO_SAMBA_LOGS_PATHS: A (glob) list of paths from which to collect Samba logs

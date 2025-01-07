@@ -15,7 +15,7 @@ vars:
 
 {{^MORIO_DOCS}}
 
-- type: log
+- type: filestream
   id: docker_everything
   paths: {{{MORIO_DOCKER_TEXT_LOGS_PATHS}}}
 

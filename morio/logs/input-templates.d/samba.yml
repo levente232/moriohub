@@ -14,7 +14,7 @@ vars:
 
 {{^MORIO_DOCS}}
 
-- type: log
+- type: filestream
   id: samba_everything
   multiline.pattern: '^\['
   multiline.negate: true

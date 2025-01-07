@@ -18,7 +18,7 @@ vars:
 
 {{^MORIO_DOCS}}
 
-- type: log # Zabbix agent logs
+- type: filestream # Zabbix agent logs
   id: zabbix_agent
   paths: {{{MORIO_ZABBIX_AGENT_LOGS_PATHS}}}
 
@@ -74,7 +74,7 @@ vars:
         fields: temp_timestamp
 
 
-- type: log # Zabbix server logs
+- type: filestream # Zabbix server logs
   id: zabbix_server
   paths: {{{MORIO_ZABBIX_SERVER_LOGS_PATHS}}}
 

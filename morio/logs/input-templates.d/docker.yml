@@ -17,7 +17,7 @@ vars:
 
 - type: log
   id: docker_everything
-  paths: {{MORIO_DOCKER_TEXT_LOGS_PATHS}}
+  paths: {{{MORIO_DOCKER_TEXT_LOGS_PATHS}}}
 
   processors:
     - add_fields:

@@ -26,7 +26,7 @@ vars:
 
 - type: filestream # This collects all Apache error logs
   id: apache2_error
-  paths: {{MORIO_APACHE_ERROR_LOGS_PATHS}}
+  paths: {{{MORIO_APACHE_ERROR_LOGS_PATHS}}}
 
   processors:
     - add_fields:
@@ -76,7 +76,7 @@ vars:
 
 - type: filestream # This collects all Apache access logs
   id: apache2_access
-  paths: {{MORIO_APACHE_ACCESS_LOGS_PATHS}}
+  paths: {{{MORIO_APACHE_ACCESS_LOGS_PATHS}}}
 
   processors:
     - add_fields:

@@ -20,7 +20,7 @@ vars:
 
 - type: log # Zabbix agent logs
   id: zabbix_agent
-  paths: {{MORIO_ZABBIX_AGENT_LOGS_PATHS}}
+  paths: {{{MORIO_ZABBIX_AGENT_LOGS_PATHS}}}
 
   processors:
     - add_fields:
@@ -76,7 +76,7 @@ vars:
 
 - type: log # Zabbix server logs
   id: zabbix_server
-  paths: {{MORIO_ZABBIX_SERVER_LOGS_PATHS}}
+  paths: {{{MORIO_ZABBIX_SERVER_LOGS_PATHS}}}
 
   processors:
     - add_fields:

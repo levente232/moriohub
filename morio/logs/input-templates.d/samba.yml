@@ -20,7 +20,7 @@ vars:
   multiline.negate: true
   multiline.match: after
   multiline.skip_newline: true
-  paths: {{MORIO_SAMBA_LOGS_PATHS}}
+  paths: {{{MORIO_SAMBA_LOGS_PATHS}}}
 
   processors:
     - add_fields:

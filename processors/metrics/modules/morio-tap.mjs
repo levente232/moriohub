@@ -23,7 +23,7 @@ export const info = {
     test: {
       dflt: 666,
       title: 'Just some number',
-      about: 'This is a test for module-based settings in stream processors'
+      about: 'This is a test for module-based settings in stream processors',
       type: 'number'
     }
   }

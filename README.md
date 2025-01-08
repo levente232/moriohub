@@ -12,13 +12,13 @@
 This repository holds a curated collection of templates for
 [Morio](https://github/certeu/morio/).
 
-There are three top-level folders here:
+There are four top-level folders here:
 
-- [bundles](#bundles): These bundle both client and colletor templates
-- [morio](#morio): These are for the Morio client
-- [moriod](#morio): These are for Moriod (the Morio collector)
-  - [Overlays](#overlays): These are Moriod settings overlays
-  - [Watchers](#watchers): These are monitors for the watcher service (heartbeat)
+- [bundles](#bundles): These bundle both client templates and collector overlays
+- [modules](#modules): These Morio client modules
+- [overlays](#overlays): These are Moriod settings overlays
+- [processors](#processors): These are stream processors for the tap service
+- [watchers](#watchers): These are monitors for the watcher service (heartbeat)
 
 > [!Note]
 > **This is a work in progress. YMMV.**
@@ -27,9 +27,9 @@ There are three top-level folders here:
 
 These are moriod configuration overlays that bundle multiple moriohub entries.
 
-## morio
+## modules
 
-The Morio client modules are stored in the `morio` folder.
+The Morio client modules are stored in the `modules` folder.
 
 These (Morio client) modules provide configuration for the different agents
 that are bundled by the Morio client. These agents gather different types of
@@ -207,24 +207,20 @@ vars:
 # Do not forget to close your conditional blocks.
 ```
 
-## moriod
+## overlays
 
-This folder hols re-usable code/settings for a Morio collector.
-
-## Overlays
-
-The overlays are stored in the `moriod/overlays` folder.
+The overlays are stored in the `overlays` folder.
 
 These overlays extend the settings of a Morio collector.
 Refer to [the documentation on overlays][overlays] for all details.
 
-## Processors
+## processors
 
-These are stram processors. They are stored in the `moriod/processors` folder.
+These are stram processors. They are stored in the `processors` folder.
 
-## Watchers
+## watchers
 
-The watchers are stored in hte `moriod/watchers` folder.
+The watchers are stored in hte `watchers` folder.
 
 FIXME: Write documentation on this.
 

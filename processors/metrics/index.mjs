@@ -21,20 +21,20 @@ export default function metricsStreamProcessor (data, tools, topic) {
     let result
     try {
       result = modules[data.morio.module](data, tools)
-      if (result) tools.cache.metricset(result, data, config)
+      if (result) tools.cache.metricset(result, data, tools.getSettings('tap.metrics', {}))
     }
     catch(err) {
       tools.note(`[metrics] Error in module logic`, { err, data })
     }
   }
-  else if (config.log_unhandled) {
+  else if (tools.getSettings('tap.metrics.log_unhandled', false)) {
     tools.note(`[metrics] Cannot handle message`, data)
   }
 
   /*
    * Metricset: throughput
    */
-  //if (data.metricset?.name === 'throughput') tools.cache.metricset(data.morio.tap.throughput, data, config)
+  //if (data.metricset?.name === 'throughput') tools.cache.metricset(data.morio.tap.throughput, data, tools.getSettings('tap.metrics', {}))
 }
 
 /*
@@ -113,6 +113,22 @@ It also supports dynamic loading of module-specific logic.`,
           val: true,
           label: 'Auto-create events based on metrics',
           about: 'Eventifying metrics allows for event-driven automation and monitoring based on audit information',
+        },
+      ],
+    },
+    log_unhandled: {
+      dflt: false,
+      title: 'Log unhandled metrics data',
+      type: 'list',
+      list: [
+        {
+          val: false,
+          label: 'Do not log unhandled metrics data (disable)',
+        },
+        {
+          val: true,
+          label: 'Log unhandled metrics data',
+          about: 'This allows you to see the kind of metrics data that is not being treated by this stream processor. It is intended as a debug tool for stream processor developers and will generate a lot of notes.'
         },
       ],
     },

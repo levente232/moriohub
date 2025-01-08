@@ -33,7 +33,7 @@ export default function auditStreamProcessor (data, tools, topic) {
      */
     if (result) tools.cache.audit(result)
   }
-  else if (config.log_unhandled) {
+  else if (tools.getSettings('tap.processors.audit.log_unhandled', false)) {
     tools.note(`[metrics] Cannot handle message`, data)
   }
 
@@ -106,6 +106,22 @@ It also supports dynamic loading of module-specific logic.`,
       dflt: 2,
       title: 'fixme',
       type: 'number'
+    },
+    log_unhandled: {
+      dflt: false,
+      title: 'Log unhandled audit data',
+      type: 'list',
+      list: [
+        {
+          val: false,
+          label: 'Do not log unhandled audit data (disable)',
+        },
+        {
+          val: true,
+          label: 'Log unhandled audit data',
+          about: 'This allows you to see the kind of audit data that is not being treated by this stream processor. It is intended as a debug tool for stream processor developers and will generate a lot of notes.'
+        },
+      ],
     },
   }
 }

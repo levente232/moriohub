@@ -17,7 +17,7 @@ export default function eventsStreamProcessor (data, tools, topic) {
   /*
    * Cache events if configured to do so
    */
-  if (config.cache) tools.cache.event(data)
+  if (tools.getSettings('tap.events.cache', false)) tools.cache.event(data)
 
   /*
    * Create note when host ID is missing
@@ -35,7 +35,7 @@ export default function eventsStreamProcessor (data, tools, topic) {
       tools.note(`[event] Error in module logic`, { err, data })
     }
   }
-  else if (config.log_unhandled) {
+  else if (tools.getSettings('tap.events.log_unhandled', false)) {
     tools.note(`[event] Cannot handle message`, data)
   }
 }

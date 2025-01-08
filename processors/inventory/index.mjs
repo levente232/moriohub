@@ -7,12 +7,6 @@
  */
 
 /*
- * Note that a Morio stream processor can only use dependencies that are
- * available inside the morio-tap container. Of which ipaddr.js is one :)
- */
-import ipaddr from 'ipaddr.js'
-
-/*
  * These are fields that are part of the host data
  * In addition to macs, ips, and os which is more complex
  */
@@ -119,13 +113,13 @@ export default [
  */
 function normalizeIp(ip, tools) {
   // Do not continue if the IP is not valid
-  if (typeof ip !== 'string' || !ipaddr.isValid(ip)) {
+  if (typeof ip !== 'string' || !tools.ipaddr.isValid(ip)) {
     tools.note(`Cannot parse IP address: ${JSON.stringify(ip)}`)
     return false
   }
 
   // Parse the IP
-  const address = ipaddr.parse(ip)
+  const address = tools.ipaddr.parse(ip)
 
   return address.kind() === "ipv4"
     ? address.toString()

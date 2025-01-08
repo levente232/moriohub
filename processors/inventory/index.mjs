@@ -7,15 +7,19 @@
  */
 
 /*
- * These are fields that are part of the host data
- * In addition to macs, ips, and os which is more complex
+ * A Morio stream processor to build an inventory
+ *
+ * This is really three stream processors in a trench coat.
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {obectt} tools - The tools object
+ * @param {string} topic - The topic the data came from
  */
-const hostFields = ['name', 'hostname', 'architecture', 'id']
-
-/*
- * These are fields that are part of the os data
- */
-const osFields = ['codename', 'family', 'kernel', 'name', 'platform', 'type', 'version']
+export default function inventoryStreamProcessor (data, tools, topic) {
+  if (topic === 'metrics') return metricsProcessor(data, tools, topic)
+  if (topic === 'inventory') return inventoryProcessor(data, tools, topic)
+  if (topic === 'audit') return auditProcessor(data, tools, topic)
+}
 
 /*
  * A Morio stream processor to update the inventory based on audit data
@@ -26,13 +30,26 @@ const osFields = ['codename', 'family', 'kernel', 'name', 'platform', 'type', 'v
  * @param {obectt} tools - The tools object
  * @param {string} topic - The topic the data came from
  */
-function inventoryStreamProcessorAudit (data, tools, topic) {
+function auditProcessor (data, tools, topic) {
   /*
    * FIXME: Is there any audit event we should track for the inventory?
    * for example, the 'existing_user' action could be tracked to compile
    * a list of user accounts on a given system.
    */
   return
+}
+
+/*
+ * A Morio stream processor to update the inventory
+ *
+ * This method will be called for ever incoming message on the inventory topic
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {obectt} tools - The tools object
+ * @param {string} topic - The topic the data came from
+ */
+function inventoryProcessor (data, tools, topic) {
+  if (data.morio.inventory_update) tools.inventory.host.update(data, tools)
 }
 
 /*
@@ -44,7 +61,7 @@ function inventoryStreamProcessorAudit (data, tools, topic) {
  * @param {obectt} tools - The tools object
  * @param {string} topic - The topic the data came from
  */
-function inventoryStreamProcessorMetrics (data, tools, topic) {
+function metricsProcessor (data, tools, topic) {
   /*
    * Only process inventory updates
    */
@@ -77,28 +94,6 @@ function inventoryStreamProcessorMetrics (data, tools, topic) {
     }
   })
 }
-
-/*
- * A Morio stream processor to update the inventory
- *
- * This method will be called for ever incoming message on the inventory topic
- *
- * @param {object} data - The data from RedPanda
- * @param {obectt} tools - The tools object
- * @param {string} topic - The topic the data came from
- */
-function inventoryStreamProcessor (data, tools, topic) {
-  if (data.morio.inventory_update) tools.inventory.host.update(data, tools)
-}
-
-/*
- * This is the default export that bundles our various stream processors
- */
-export default [
-  inventoryStreamProcessorAudit,
-  inventoryStreamProcessorMetrics,
-  inventoryStreamProcessor,
-]
 
 /**
  * Normalises an IP address into a standard format (supports both IPv4 and IPv6)
@@ -264,7 +259,7 @@ const extractInventoryDataFromAudit = {
  */
 export const info = {
   title: 'Inventory stream processor',
-  about: `This stream processor will process audit and metrics data to build out an inventory of your infrastructure.
+  about: `This stream processor will process data from various topics to build out an inventory of your infrastructure.
 
 It can only be enabled or disabled, and requires no configuration.`,
   settings: {
@@ -284,6 +279,12 @@ It can only be enabled or disabled, and requires no configuration.`,
           about: 'Select this to enable this stream processor',
         },
       ]
+    },
+    topics: {
+      dflt: ['audit', 'inventory', 'metrics'],
+      title: 'List of topics to subscribe to',
+      about: `Changing this from the default list (audit, inventory, metrics) is risky`,
+      type: 'labels',
     },
   }
 }

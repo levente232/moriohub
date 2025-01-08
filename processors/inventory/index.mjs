@@ -1,11 +1,11 @@
 /**
  * This is a Morio stream processor to build out an inventory.
- * It is closely integrastion with the Morio Tap service,
+ * It is closely integrated with the Morio Tap service,
  * and if you are looking to write your own stream processor
  * this is perhaps not the best example as it is more complex
  * than most processors, and relies on specific Morio features.
  */
-import { config } from "./config.mjs"
+
 /*
  * Note that a Morio stream processor can only use dependencies that are
  * available inside the morio-tap container. Of which ipaddr.js is one :)
@@ -17,75 +17,94 @@ import ipaddr from 'ipaddr.js'
  * In addition to macs, ips, and os which is more complex
  */
 const hostFields = ['name', 'hostname', 'architecture', 'id']
+
 /*
  * These are fields that are part of the os data
  */
 const osFields = ['codename', 'family', 'kernel', 'name', 'platform', 'type', 'version']
 
-const auditProcessor = config.enabled ? {
-  ...config.audit,
-  enabled: true,
-  method: (data, tools, topic) => {
-    /*
-     * FIXME: Is there any audit event we should track for the inventory?
-     * for example, the 'existing_user' action could be tracked to compile
-     * a list of user accounts on a given system.
-     */
-    return
-  }
-} : null
-
-const metricsProcessor = config.enabled ? {
-  ...config.metrics,
-  enabled: true,
-  method: (data, tools, topic) => {
-    /*
-     * Only process inventory updates
-     */
-    if (!data.morio?.inventory_update) return
-
-    /*
-     * Do not process hosts that lack an ID
-     */
-    if (!data.host.id) tools.note(`Host lacks ID: : ${JSON.stringify(data)}`)
-
-    /*
-     * Only process hosts when we know how to
-     * transform data from the Morio module that generated it
-     */
-    if (!data?.morio?.module || typeof extractInventoryDataFromMetrics[data.morio.module] !== 'function') return
-
-    /*
-     * Transform host data
-     */
-    const host = extractInventoryDataFromMetrics[data.morio.module](data, tools)
-
-    /*
-     * Only update if we have data
-     */
-    if (host) tools.produce.inventoryUpdate({
-      host,
-      morio: {
-        inventory_update: true,
-        module: data.morio.module,
-      }
-    })
-  }
-} : null
-
-const inventoryProcessor = config.enabled ? {
-  ...config.inventory,
-  enabled: true,
-  method: (data, tools, topic) => {
-    if (data.morio.inventory_update) tools.inventory.host.update(data, tools)
-  }
-} : null
+/*
+ * A Morio stream processor to update the inventory based on audit data
+ *
+ * This method will be called for ever incoming message on the audit topic
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {obectt} tools - The tools object
+ * @param {string} topic - The topic the data came from
+ */
+function inventoryStreamProcessorAudit (data, tools, topic) {
+  /*
+   * FIXME: Is there any audit event we should track for the inventory?
+   * for example, the 'existing_user' action could be tracked to compile
+   * a list of user accounts on a given system.
+   */
+  return
+}
 
 /*
- * This is the default export that bundles are various processors
+ * A Morio stream processor to update the inventory based on metrics data
+ *
+ * This method will be called for ever incoming message on the metrics topic
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {obectt} tools - The tools object
+ * @param {string} topic - The topic the data came from
  */
-const processors = [ auditProcessor, metricsProcessor, inventoryProcessor ]
-export default processors
+function inventoryStreamProcessorMetrics (data, tools, topic) {
+  /*
+   * Only process inventory updates
+   */
+  if (!data.morio?.inventory_update) return
+
+  /*
+   * Do not process hosts that lack an ID
+   */
+  if (!data.host.id) tools.note(`Host lacks ID: : ${JSON.stringify(data)}`)
+
+  /*
+   * Only process hosts when we know how to
+   * transform data from the Morio module that generated it
+   */
+  if (!data?.morio?.module || typeof extractInventoryDataFromMetrics[data.morio.module] !== 'function') return
+
+  /*
+   * Transform host data
+   */
+  const host = extractInventoryDataFromMetrics[data.morio.module](data, tools)
+
+  /*
+   * Only update if we have data
+   */
+  if (host) tools.produce.inventoryUpdate({
+    host,
+    morio: {
+      inventory_update: true,
+      module: data.morio.module,
+    }
+  })
+}
+
+/*
+ * A Morio stream processor to update the inventory
+ *
+ * This method will be called for ever incoming message on the inventory topic
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {obectt} tools - The tools object
+ * @param {string} topic - The topic the data came from
+ */
+function inventoryStreamProcessor (data, tools, topic) {
+  if (data.morio.inventory_update) tools.inventory.host.update(data, tools)
+}
+
+/*
+ * This is the default export that bundles our various stream processors
+ */
+export default [
+  inventoryStreamProcessorAudit,
+  inventoryStreamProcessorMetrics,
+  inventoryStreamProcessor,
+]
 
 /**
  * Normalises an IP address into a standard format (supports both IPv4 and IPv6)
@@ -246,6 +265,9 @@ const extractInventoryDataFromAudit = {
   }
 }
 
+/*
+ * This is used for both the UI and to generate the default settings
+ */
 export const info = {
   title: 'Inventory stream processor',
   about: `This stream processor will process audit and metrics data to build out an inventory of your infrastructure.

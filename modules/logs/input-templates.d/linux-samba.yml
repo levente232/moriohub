@@ -16,10 +16,13 @@ vars:
 
 - type: filestream
   id: samba_everything
-  multiline.pattern: '^\['
-  multiline.negate: true
-  multiline.match: after
-  multiline.skip_newline: true
+  parsers:
+    - multiline:
+        type: pattern
+        pattern: '^\['
+        negate: true
+        match: after
+        skip_newline: true
   paths: {{{MORIO_SAMBA_LOGS_PATHS}}}
 
   processors:
@@ -31,7 +34,7 @@ vars:
     - add_fields:
         target: morio
         fields:
-          module_version: "SA-AA"
+          module_version: "SA-AB"
 
     - add_fields:
         target: host

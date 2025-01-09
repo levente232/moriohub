@@ -48,7 +48,7 @@ vars:
       then:
         - dissect:
             field: "message"
-            tokenizer: "{\"log\":\"%{event.message}\",\"stream\":\"%{event.stream}\",\"time\":\"%{temp_timestamp}\"}"
+            tokenizer: "{\"log\":\"%{event.message}\",\"stream\":\"%{event.stream}\",\"time\":\"%{timestamp}\"}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
@@ -67,7 +67,7 @@ vars:
       else:
         - dissect:
             field: "message"
-            tokenizer: "%{temp_timestamp}\t%{client.ip}\t%{client.id}\t%{client.session_name}\t%{server.ip}\t%{event.message}"
+            tokenizer: "%{timestamp}\t%{client.ip}\t%{client.id}\t%{client.session_name}\t%{server.ip}\t%{event.message}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
@@ -85,13 +85,11 @@ vars:
               detected_format: "tab-delimited text"
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - '2006-01-02T15:04:05.999999999Z'
           - '2006-01-02 15:04:05 -0700'
         timezone: Local
-    - drop_fields:
-        fields: temp_timestamp
 
     {{#MORIO_DOCKER_SPLUNK_INDEX_NAME }}
     - add_fields:

@@ -47,7 +47,7 @@ vars:
 
     - dissect:
         field: "message"
-        tokenizer: "[%{temp_timestamp}, %{log.level}] %{service.module.file}:%{service.module.line}(%{service.function})%{event.message}"
+        tokenizer: "[%{timestamp}, %{log.level}] %{service.module.file}:%{service.module.line}(%{service.function})%{event.message}"
         target_prefix: ''
         ignore_missing: true
         ignore_failure: true
@@ -55,12 +55,10 @@ vars:
         trim_values: left # as the Syslog level can have spaces
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - '2006/01/02 15:04:05.999999'
         timezone: Local
-    - drop_fields:
-        fields: temp_timestamp
 
     {{#MORIO_SAMBA_SPLUNK_INDEX_NAME }}
     - add_fields:

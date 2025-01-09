@@ -48,7 +48,7 @@ vars:
       then:
         - dissect:
             field: "message"
-            tokenizer: "[%{temp_timestamp}] [%{event.module}:%{log.level}] [pid %{process.pid}:tid %{thread.id}] %{error.code}: %{event.message}"
+            tokenizer: "[%{timestamp}] [%{event.module}:%{log.level}] [pid %{process.pid}:tid %{thread.id}] %{error.code}: %{event.message}"
             target_prefix: ''
             ignore_missing: true
             ignore_failure: true
@@ -59,12 +59,10 @@ vars:
               detected_format: "default"
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - 'Mon Jan 02 15:04:05.999999 2006'
         timezone: Local
-    - drop_fields:
-        fields: temp_timestamp
 
     {{#MORIO_APACHE_SPLUNK_INDEX_NAME}}
     - add_fields:
@@ -109,7 +107,7 @@ vars:
           then:
             - dissect:
                 field: "message"
-                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes}"
+                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes}"
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -121,7 +119,7 @@ vars:
           else:
             - dissect:
                 field: "message"
-                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes}"
+                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes}"
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -141,7 +139,7 @@ vars:
           then:
             - dissect:
                 field: "message"
-                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
+                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -153,7 +151,7 @@ vars:
           else:
             - dissect:
                 field: "message"
-                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
+                tokenizer: "%{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -173,7 +171,7 @@ vars:
           then:
             - dissect:
                 field: "message"
-                tokenizer: "%{http.server.name}:%{http.server.port} %{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
+                tokenizer: "%{http.server.name}:%{http.server.port} %{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{http.request.method} %{url.full} %{http.version}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -185,7 +183,7 @@ vars:
           else:
             - dissect:
                 field: "message"
-                tokenizer: "%{http.server.name}:%{http.server.port} %{source.ip} %{http.auth_type} %{http.username} [%{temp_timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
+                tokenizer: "%{http.server.name}:%{http.server.port} %{source.ip} %{http.auth_type} %{http.username} [%{timestamp}] \"%{url.full}\" %{http.response.status_code} %{http.response.body.bytes} \"%{http.request.referrer}\" \"%{user_agent.original}\""
                 target_prefix: ''
                 ignore_missing: true
                 ignore_failure: true
@@ -196,11 +194,9 @@ vars:
                   detected_format: "vhost_combined_incomplete"
 
     - timestamp:
-        field: temp_timestamp
+        field: timestamp
         layouts:
           - '02/Jan/2006:15:04:05 -0700'
-    - drop_fields:
-        fields: temp_timestamp
 
     {{#MORIO_APACHE_SPLUNK_INDEX_NAME}}
     - add_fields:

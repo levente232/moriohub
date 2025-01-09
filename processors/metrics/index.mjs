@@ -41,36 +41,15 @@ export default function metricsStreamProcessor (data, tools, topic) {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  docs: 'https://morio.it/docs/FIXME',
-  title: 'Metrics stream processor',
-  about: `This stream processor will process metrics data flowing through your Morio collector.
-
-It can cache recent metrics, as well as enventify them for event-driven automation.
-It also supports dynamic loading of module-specific logic.`,
+//  docs: 'https://morio.it/docs/FIXME',
+//  title: 'Metrics stream processor',
+//  about: `This stream processor will process metrics data flowing through your Morio collector.
+//
+//It can cache recent metrics, as well as enventify them for event-driven automation.
+//It also supports dynamic loading of module-specific logic.`,
   settings: {
-    enabled: {
-      title: 'Enable metrics stream processor',
-      dflt: true,
-      type: 'list',
-      list: [
-        {
-          val: false,
-          label: 'Disabled',
-          about: 'Select this to completely disabled this stream processor',
-        },
-        {
-          val: true,
-          label: 'Enabled',
-          about: 'Select this to enable this stream processor',
-        },
-      ]
-    },
-    topics: {
-      dflt: ['metrics'],
-      title: 'List of topics to subscribe to',
-      about: `Changing this from the default \`metrics\` is risky`,
-      type: 'labels',
-    },
+    enabled: true,
+    topics: ['metrics'],
     cache: {
       dflt: true,
       title: 'Cache metrics data',

@@ -44,7 +44,7 @@ export default function auditStreamProcessor (data, tools, topic) {
  */
 export const info = {
   title: 'Audit data stream processor',
-  about: `This stream processor will process audit data flowing through your Morio collection.
+  docs: `This stream processor will process audit data flowing through your Morio collection.
 
 It can cache recent audit events, as well as enventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,

@@ -17,10 +17,11 @@ export default function metricsStreamProcessor (data, tools, topic) {
   /*
    * Hand over to module-specific logic
    */
-  if (data?.morio?.module && typeof modules[data.morio.module] === 'function') {
+  const module = tools.get(data,['labels', 'morio.module'], false)
+  if (module && typeof modules[module] === 'function') {
     let result
     try {
-      result = modules[data.morio.module](data, tools)
+      result = modules[module](data, tools)
       if (result) tools.cache.metricset(result, data, tools.getSettings('tap.metrics', {}))
     }
     catch(err) {
@@ -28,7 +29,7 @@ export default function metricsStreamProcessor (data, tools, topic) {
     }
   }
   else if (tools.getSettings('tap.metrics.log_unhandled', false)) {
-    tools.note(`[metrics] Cannot handle message`, data)
+    tools.note(`[metrics] Cannot process message (${module})`, data)
   }
 
   /*
@@ -41,9 +42,10 @@ export default function metricsStreamProcessor (data, tools, topic) {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  docs: `This stream processor will process metrics data flowing through your Morio collector.
+  title: 'Metrics stream processor',
+  about: `This stream processor will process metrics data flowing through your Morio collector.
 
-It can cache recent metrics, as well as enventify them for event-driven automation.
+It can cache recent metrics as well as eventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,
   settings: {
     topics: ['metrics'],

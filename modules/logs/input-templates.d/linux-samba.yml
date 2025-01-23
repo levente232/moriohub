@@ -10,14 +10,6 @@
 
 - type: filestream
   id: samba_everything
-  parsers:
-    - multiline:
-        type: pattern
-        pattern: '^\['
-        negate: true
-        match: after
-        skip_newline: true
-  paths: {{{MORIO_SAMBA_LOGS_PATHS}}}
 
   parsers:
     - multiline:

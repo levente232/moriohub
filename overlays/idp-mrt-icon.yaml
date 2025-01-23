@@ -8,3 +8,6 @@ merge:
       visibility:
         mrt: icon
 
+moriodata: 
+  info: "Enables the Morio Root Token provider behind an icon on the login screen"
+

@@ -7,3 +7,7 @@ merge:
    ui:
       visibility:
         apikey: icon
+
+moriodata: 
+  info: "Enables the API Key identity provider for Morio"
+

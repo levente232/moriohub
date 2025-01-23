@@ -4,3 +4,7 @@ merge:
       moriohub:
         url: "https://github.com/certeu/moriohub.git"
         ref: main
+
+moriodata:
+  info: Makes moriohub available as a preseed source (main branch)
+

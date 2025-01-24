@@ -4,9 +4,9 @@ merge:
       apikey:
         label: API Key
         provider: apikey
-   ui:
-      visibility:
-        apikey: icon
+  ui:
+    visibility:
+      apikey: icon
 
 moriodata: 
   info: "Enables the API Key identity provider for Morio"

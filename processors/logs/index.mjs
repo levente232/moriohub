@@ -91,8 +91,7 @@ function defaultLogCaching (data, tools) {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  title: 'Logs stream processor',
-  about: `This stream processor will process log data flowing through your Morio collection.
+  info: `This stream processor will process log data flowing through your Morio collection.
 
 It can cache recent log data, as well as eventify them for event-driven automation.
 It also supports dynamic loading of module-specific logic.`,

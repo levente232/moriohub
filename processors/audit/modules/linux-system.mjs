@@ -122,5 +122,5 @@ function auditSummary (data, tools) {
 }
 
 export const info = {
-  about: `This stream processor plugin will process audit data from the linux-system module.`,
+  info: `This stream processor plugin will process audit data from the linux-system module.`,
 }

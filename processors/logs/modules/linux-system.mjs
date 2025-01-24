@@ -35,6 +35,6 @@ export default function linuxSystemLogs (data={}, tools) {
 }
 
 export const info = {
-  about: `This stream processor plugin will process log data from the linux-system module.`,
+  info: `This stream processor plugin will process log data from the linux-system module.`,
 }
 

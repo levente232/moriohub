@@ -259,8 +259,7 @@ const extractInventoryDataFromAudit = {
  * This is used for both the UI and to generate the default settings
  */
 export const info = {
-  title: 'Inventory stream processor',
-  about: `This stream processor will process data from various topics to build out an inventory of your infrastructure.
+  info: `This stream processor will process data from various topics to build out an inventory of your infrastructure.
 
 It can only be enabled or disabled, and requires no configuration.`,
   settings: {

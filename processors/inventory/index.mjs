@@ -49,7 +49,7 @@ function auditProcessor (data, tools, topic) {
  * @param {string} topic - The topic the data came from
  */
 function inventoryProcessor (data, tools, topic) {
-  if (tools.get(data, ['labels', 'inventory.update'], false)) tools.inventory.host.update(data, tools)
+  if (isInventoryUpdate(data, tools)) tools.inventory.host.update(data, tools)
 }
 
 /*
@@ -65,7 +65,7 @@ function metricsProcessor (data, tools, topic) {
   /*
    * Only process inventory updates
    */
-  if (!tools.get(data, ['labels', 'inventory.update'], false)) return
+  if (!isInventoryUpdate(data, tools)) return
 
   /*
    * Do not process hosts that lack an ID
@@ -73,15 +73,9 @@ function metricsProcessor (data, tools, topic) {
   if (!data.host.id) tools.note(`Host lacks ID: : ${JSON.stringify(data)}`)
 
   /*
-   * Only process hosts when we know how to
-   * transform data from the Morio module that generated it
-   */
-  const module = tools.get(data,['labels', 'morio.module'], false)
-  if (!module || typeof extractInventoryDataFromMetrics[module] !== 'function') return
-
-  /*
    * Transform host data
    */
+  const module = tools.get(data, ['labels' ,'morio.module'], false)
   const host = extractInventoryDataFromMetrics[module](data, tools)
 
   /*
@@ -90,10 +84,23 @@ function metricsProcessor (data, tools, topic) {
   if (host) tools.produce.inventoryUpdate({
     host,
     labels: {
-      'inventory.update': true,
+      'morio.inventory.update': true,
       'morio.module': module
     }
   })
+}
+
+/**
+ * Helper method to keep the module check DRY
+ *
+ * @param {object} data - The data from RedPanda
+ * @param {object} tools - The tap tools object
+ * @return {bool} match - true if it is an inventory update, false if not
+ */
+function isInventoryUpdate(data, tools) {
+  return (tools.get(data, ['labels', 'morio.module'], false) === 'linux-morio-inventory')
+    ? true
+    : false
 }
 
 /**
@@ -165,7 +172,7 @@ const extractInventoryDataFromMetrics = {
    * @param {object} tools - The tools object
    * @return {object} host - The inventory host data
    */
-  'linux-system': function linuxSystemMetrics (data={}, tools) {
+  'linux-morio-inventory': function linuxMorioInventory (data={}, tools) {
 
     const host = {
       // data.host.id is always set when we get to this point

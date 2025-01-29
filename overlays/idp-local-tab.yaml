@@ -1,0 +1,13 @@
+merge: 
+  iam:
+    providers:
+      local:
+        label: Morio Account
+        provider: local
+    ui:
+      visibility:
+        local: tab
+
+moriodata: 
+  info: "Enables the Local identity provider as a tab on the login screen"
+

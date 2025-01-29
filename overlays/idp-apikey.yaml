@@ -1,21 +1,13 @@
-{{#MORIO_DOCS}}
-title: API Key Identity Provider
-about: |-
-  A moriod overlay to enable the `apikey` identity provider.
+merge:
+  iam:
+    providers:
+      apikey:
+        label: API Key
+        provider: apikey
+  ui:
+    visibility:
+      apikey: icon
 
-  By default this hides the apikey-based sign in in th UI behind the lock icon.
-  But you can change this with the `IDP_APIKEY_SHOW_AS_TAB` variable.
-vars:
-  IDP_APIKEY_SHOW_AS_TAB:
-    about: Shows the `apikey` identity provider as a tab on the sign in form.
-    default: false
-{{/MORIO_DOCS}}
-
-{{^MORIO_DOCS}}
-iam.providers.apikey:
-  provider: apikey
-  id: apikey
-  label: API Key
-iam.ui.visibility.apikey: {{#IDP_APIKEY_SHOW_AS_TAB}}full{{/IDP_APIKEY_SHOW_AS_TAB}}{{^IDP_APIKEY_SHOW_AS_TAB}}icon{{/IDP_APIKEY_SHOW_AS_TAB}}
-{{/MORIO_DOCS}}
+moriodata: 
+  info: "Enables the API Key identity provider for Morio"
 

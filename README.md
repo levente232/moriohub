@@ -12,18 +12,24 @@
 This repository holds a curated collection of templates for
 [Morio](https://github/certeu/morio/).
 
-There are two types of templates curated here:
+There are four top-level folders here:
 
-- [Modules](#modules): These are Morio client modules
-- [Overlays](#overlays): These are Moriod settings overlays
-- [Watchers](#watchers): These are monitors for the watcher service (heartbeat)
+- [bundles](#bundles): These bundle both client templates and collector overlays
+- [modules](#modules): These Morio client modules
+- [overlays](#overlays): These are Moriod settings overlays
+- [processors](#processors): These are stream processors for the tap service
+- [watchers](#watchers): These are monitors for the watcher service (heartbeat)
 
 > [!Note]
 > **This is a work in progress. YMMV.**
 
-## Modules
+## bundles
 
-The modules are stored in the `modules` folder.
+These are moriod configuration overlays that bundle multiple moriohub entries.
+
+## modules
+
+The Morio client modules are stored in the `modules` folder.
 
 These (Morio client) modules provide configuration for the different agents
 that are bundled by the Morio client. These agents gather different types of
@@ -62,20 +68,20 @@ Below are some rules to ensure each module plays nice within the Morio ecosystem
 - Modules that are platform-agnostic shall not have a platform prefix
 - Module names shall only use `[a-z][0-9]-`
 - Modules can provide one or more of the following files:
-  - `modules/audit/module-templates.d/[module-name].yaml`: The module
+  - `morio/audit/module-templates.d/[module-name].yaml`: The module
      configuration for Auditbeat
-  - `modules/audit/rule-templates.d/[module-name].rules`: A single rules file for auditd
-  - `modules/audit/rule-templates.d/[module-name]-*.rules`: If a module utilzes multiple
+  - `morio/audit/rule-templates.d/[module-name].rules`: A single rules file for auditd
+  - `morio/audit/rule-templates.d/[module-name]-*.rules`: If a module utilzes multiple
     rules files, prefix them with the module name and a dash
-  - `modules/logs/module-templates.d/[module-name].yaml`: The module configuration for
+  - `morio/logs/module-templates.d/[module-name].yaml`: The module configuration for
     Filebeat. Create an empty placeholder file if your module only provide
     inputs.
-  - `modules/logs/input-templates.d/[module-name].yaml`: The input configuration for
+  - `morio/logs/input-templates.d/[module-name].yaml`: The input configuration for
     Filebeat
-  - `modules/metrics/module-templates.d/[module-name].yaml`: The configuration for
+  - `morio/metrics/module-templates.d/[module-name].yaml`: The configuration for
     Metricbeat
 
-### Module file templates
+### Morio client module
 
 Each of the various beats agents takes a YAML file as configuration.
 
@@ -201,14 +207,18 @@ vars:
 # Do not forget to close your conditional blocks.
 ```
 
-## Overlays
+## overlays
 
 The overlays are stored in the `overlays` folder.
 
 These overlays extend the settings of a Morio collector.
 Refer to [the documentation on overlays][overlays] for all details.
 
-## Watchers
+## processors
+
+These are stram processors. They are stored in the `processors` folder.
+
+## watchers
 
 The watchers are stored in hte `watchers` folder.
 

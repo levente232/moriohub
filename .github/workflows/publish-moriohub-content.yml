@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v*"
+      - "*"
 
 jobs:
   build:
@@ -44,12 +44,19 @@ jobs:
         run: |
           ls -l ./moriohub-${{ github.ref_name }}.json
 
-      # Step 7: Create Release (only for tag releases)
+      # Step 7: Create Release (release for any tag)
       - name: Create Release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') # Ensure it's a tag push
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') # Release for all tags
         uses: softprops/action-gh-release@v2
         with:
           files: ./moriohub-${{ github.ref_name }}.json # Upload JSON as release asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provide GitHub token to authenticate
 
+      # Step 8: Upload JSON as Release Asset with simpler name (remove tag from filename)
+      - name: Upload JSON as Release Asset with simplified filename
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') # Release for all tags
+        run: |
+          gh release upload ${{ github.ref_name }} ./moriohub-${{ github.ref_name }}.json --name moriohub.json --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provide GitHub token to authenticate

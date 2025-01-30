@@ -57,7 +57,7 @@ jobs:
       - name: Upload JSON as Release Asset with simplified filename
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') # Release for all tags
         run: |
-          cp ./moriohub-${{ github.ref_name }}.json ./moriohub.json
+          mv ./moriohub-${{ github.ref_name }}.json ./moriohub.json
           gh release upload ${{ github.ref_name }} ./moriohub.json --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provide GitHub token to authenticate

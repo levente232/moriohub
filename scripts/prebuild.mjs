@@ -125,20 +125,19 @@ const load = {
   },
 };
 
-export async function prebuildMoriohubContent(version) {
+export async function prebuildMoriohubContent() {
   const data = {
     modules: await load.modules(),
     overlays: await load.overlays(),
     processors: await load.processors(),
   };
 
-  await writeJsonFile(`./moriohub-${version}.json`, data);
+  await writeJsonFile(`./moriohub.json`, data);
 }
 
 // Call the function with the VERSION environment variable
-const version = process.env.VERSION;
 if (version) {
-  prebuildMoriohubContent(version).catch((err) => {
+  prebuildMoriohubContent().catch((err) => {
     console.error("Error during prebuild:", err);
     process.exit(1); // Exit with error if something goes wrong
   });

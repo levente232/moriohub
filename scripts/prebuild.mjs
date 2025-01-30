@@ -135,13 +135,7 @@ export async function prebuildMoriohubContent() {
   await writeJsonFile(`./moriohub.json`, data);
 }
 
-// Call the function with the VERSION environment variable
-if (version) {
-  prebuildMoriohubContent().catch((err) => {
-    console.error("Error during prebuild:", err);
-    process.exit(1); // Exit with error if something goes wrong
-  });
-} else {
-  console.error("VERSION environment variable is not set.");
-  process.exit(1); // Exit with error if version is not passed
-}
+prebuildMoriohubContent().catch((err) => {
+  console.error("Error during prebuild:", err);
+  process.exit(1); // Exit with error if something goes wrong
+});
